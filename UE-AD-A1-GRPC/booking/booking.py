@@ -34,8 +34,8 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
             stub = showtime_pb2_grpc.ShowtimeStub(channel)
 
             dateParameter = showtime_pb2.Date(date=request.date)
-            response = stub.GetMoviesByDate(dateParameter)
-
+            responsePromise = stub.GetMoviesByDate.future(dateParameter)
+            response = responsePromise.result()
             # if showtime exist => add movie to booking
             # On laisse la possibilité à un utilisateur d'acheter plusieurs place (ex : 2 places pour un couple)
             if request.movieid in response.MovieDatas:
