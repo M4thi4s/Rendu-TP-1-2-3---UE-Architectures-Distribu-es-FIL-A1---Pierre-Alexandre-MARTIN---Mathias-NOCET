@@ -46,7 +46,6 @@ def actor_with_id(_, info, _id):
 
 
 def add_movie_rate(_, info, _id, _title, _director, _rate):
-    # new_movie = {}
     with open('{}/data/movies.json'.format("."), "r") as rfile:
         movies = json.load(rfile)
         for movie in movies['movies']:
@@ -57,3 +56,15 @@ def add_movie_rate(_, info, _id, _title, _director, _rate):
     with open('{}/data/movies.json'.format("."), "w") as wfile:
         json.dump(movies, wfile)
     return new_movie
+
+
+def delete_movie(_, _info, _id):
+    with open('{}/data/movies.json'.format("."), "r") as rfile:
+        movies = json.load(rfile)
+        for movie in movies['movies']:
+            if movie['id'] == _id:
+                movies["movies"].pop(movie)
+                return movie
+    with open('{}/data/movies.json'.format("."), "w") as wfile:
+        json.dump(movies, wfile)
+    return None
