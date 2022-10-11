@@ -20,5 +20,5 @@ De cette manière nous avons éssayé de nous rappocher au maximum d'un service 
 Le micro-service Movie a été relié à l'API imdb-api.</br>
 Cela nous permet de faire fonctionner notre API avec les 250 premiers films du moment.
 
-### Auteurs : Pierre-Alexandre Martin - Mathias NOCET
+### Auteurs : Pierre-Alexandre MARTIN - Mathias NOCET
 ### Date : 11 oct. 2022

@@ -5,5 +5,5 @@ Ce readme abordera uniquement notre réponse à l'énoncé du TP
 Convertion en gRPC des micro-services : Movie, times & booking.</br>
 Remplacement des appels aux micro-services gRPC par des appels utilisant les stubs associés.</br>
 
-### Auteurs : Pierre-Alexandre Martin - Mathias NOCET
+### Auteurs : Pierre-Alexandre MARTIN - Mathias NOCET
 ### Date : 11 oct. 2022
