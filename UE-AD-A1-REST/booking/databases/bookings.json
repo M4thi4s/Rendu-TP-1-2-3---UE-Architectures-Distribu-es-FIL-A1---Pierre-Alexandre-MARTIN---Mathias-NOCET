@@ -1,0 +1,39 @@
+{
+  "bookings": [
+    {
+      "userid": "chris_rivers",
+      "dates": [
+        {
+          "date": "20151201",
+          "movies": ["tt0111161"]
+        }
+      ]
+    },
+    {
+      "userid": "garret_heaton",
+      "dates": [
+        {
+          "date": "20151201",
+          "movies": ["tt0111161"]
+        },
+        {
+          "date": "20151202",
+          "movies": ["tt0068646"]
+        }
+      ]
+    },
+    {
+      "userid": "dwight_schrute",
+      "dates": [
+        {
+          "date": "20151201",
+          "movies": ["tt0468569"]
+        },
+        {
+          "date": "20151205",
+          "movies": ["tt0071562"]
+        }
+      ]
+    }
+  ]
+}

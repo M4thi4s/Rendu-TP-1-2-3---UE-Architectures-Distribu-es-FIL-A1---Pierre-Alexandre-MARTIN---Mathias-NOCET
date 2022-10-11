@@ -1,0 +1,282 @@
+---
+openapi: 3.0.0
+info:
+  title: Movie API
+  description: This is the API of the Movie service
+  contact:
+    email: helene.coullon@imt-atlantique.fr
+  license:
+    name: GPL v3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/UE-archi-distribuees/Movie/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: developers
+  description: Operations available to regular developers
+paths:
+  /:
+    get:
+      tags:
+      - developers
+      summary: home page of the service
+      description: |
+        Nothing to do
+      operationId: home
+      responses:
+        "200":
+          description: welcome message
+          content:
+            text/html:
+              schema:
+                type: string
+                example: <h1>Test</h1>
+  /json:
+    get:
+      tags:
+      - developers
+      summary: get the full JSON database
+      description: |
+        Nothing to do
+      operationId: get_json
+      responses:
+        "200":
+          description: full JSON
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieID'
+  /movies/{movieid}:
+    get:
+      tags:
+      - developers
+      summary: get the movie by its id
+      description: |
+        By passing in the appropriate options, you can get info of a Movie
+      operationId: get_movie_byid
+      parameters:
+      - name: movieid
+        in: path
+        description: Movie ID.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      responses:
+        "200":
+          description: Movie description
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItem'
+        "400":
+          description: bad input parameter
+    post:
+      tags:
+      - admins
+      summary: add a movie item
+      description: Adds a movie to the system
+      operationId: create_movie
+      parameters:
+      - name: movieid
+        in: path
+        description: Movie ID.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieItem'
+      responses:
+        "200":
+          description: Movie created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItem'
+        "409":
+          description: an existing item already exists
+    delete:
+      tags:
+      - admins
+      summary: delete a movie item
+      description: Adds a movie to the system
+      operationId: del_movie
+      parameters:
+      - name: movieid
+        in: path
+        description: Movie ID.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      responses:
+        "200":
+          description: item deleted
+        "400":
+          description: ID not found
+  /titles:
+    get:
+      tags:
+      - developers
+      summary: get the movie by its title
+      description: |
+        By passing in the appropriate options, you can get Movie info
+      operationId: get_movie_bytitle
+      parameters:
+      - name: title
+        in: query
+        description: pass a title
+        required: true
+        style: form
+        explode: true
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      responses:
+        "200":
+          description: Movie item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItem'
+        "400":
+          description: bad input parameter
+  /movies/{movieid}/{rate}:
+    put:
+      tags:
+      - admins
+      summary: update a movie rate
+      description: update the rating of a movie
+      operationId: update_movie_rating
+      parameters:
+      - name: movieid
+        in: path
+        description: Movie ID.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      - name: rate
+        in: path
+        description: Movie rating.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maximum: 10
+          minimum: 0
+          type: integer
+      responses:
+        "200":
+          description: rate updated
+        "400":
+          description: movie ID not found
+
+  /bestmoviesbyratings/{number}:
+    get:
+      tags:
+      - developers
+      summary: Get "n" best movies by ratings
+      description: |
+        This function returns the "n" best movies by ratings. If the number is more than the number of movies or if the number is NaN, it returns error 400
+      operationId: get_best_movies_by_ratings
+      parameters:
+      - name: number
+        in: path
+        description: Number of film to return.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          minimum: 1
+          type: integer
+      responses:
+        "200":
+          description: Movies list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieID'
+        "400":
+          description: inconsistent number
+  /accessibleapi:
+    get:
+      tags:
+        - developers
+      summary: get the accessible API
+      description: |
+        list all accessible API
+      operationId: get_accessible_api
+      responses:
+        "200":
+          description: accessible API
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessibleAPI'
+  /apidescription:
+    get:
+      tags:
+        - developers
+      summary: OpenApi folder under yaml format
+      description: The yaml format for the OpenApi of movies
+      operationId: api-description
+      responses:
+        "200":
+          description: Content of the OpenApi folder
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: openData document
+
+components:
+  schemas:
+    MovieID:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/MovieItem'
+    MovieItem:
+      required:
+      - director
+      - rating
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          example: The Martian
+        rating:
+          type: string
+          example: "7"
+        director:
+          type: string
+          example: Paul McGuigan
+    AccessibleAPI:
+      required:
+        - accessibleapi
+      type: array

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+service Booking {
+    rpc AddBooking (AddBookingParameter) returns (AddBookingReturnMessage) {};
+    rpc GetBooking (EmptyBooking) returns (stream BookingData) {};
+    rpc GetBookingByUserId (UserId) returns (BookingData) {};
+}
+
+message EmptyBooking {}
+
+message AddBookingReturnMessage {
+    string msg = 1;
+}
+
+message AddBookingParameter {
+    string userid = 1;
+    string date = 2;
+    string movieid = 3;
+}
+
+message BookingData {
+    string userid = 1;
+    repeated DateData dates = 2;
+}
+
+message DateData {
+    string date = 1;
+    repeated string movies = 2;
+}
+
+message UserId{
+    string userid = 1;
+}

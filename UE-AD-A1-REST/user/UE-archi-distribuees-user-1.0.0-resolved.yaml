@@ -1,0 +1,158 @@
+---
+openapi: 3.0.0
+info:
+  title: User API
+  description: This is the API of the User service
+  contact:
+    email: pierre-alexandre.martin@imt-atlantique.fr | mathias.nocet@imt-atlantique.fr
+  license:
+    name: GPL v3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: developers
+  description: Operations available to regular developers
+paths:
+  /bookinglist/{id}:
+    get:
+      tags:
+      - developers
+      summary: get the booking list of a user
+      description: |
+        Get the list of all the id of the booking book per date for the user id
+      operationId: get_booking_list
+      parameters:
+      - name: id
+        in: path
+        description: id of the user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Bookings of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingsUser'
+        "400":
+          description: bad input parameter
+  /usermovies/{id}:
+    get:
+      tags:
+      - developers
+      summary: get the list of booking movies of a user with description
+      description: |
+        Get the schedule for a given date
+      operationId: get_user_movies
+      parameters:
+      - name: id
+        in: path
+        description: id of the user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Bookings of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllMovies'
+        "400":
+          description: bad input parameter
+  /accessibleapi:
+    get:
+      tags:
+        - developers
+      summary: get the accessible API
+      description: |
+        list all accessible API
+      operationId: get_accessible_api
+      responses:
+        "200":
+          description: accessible API
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessibleAPI'
+  /apidescription:
+    get:
+      tags:
+        - developers
+      summary: OpenApi folder under yaml format
+      description: The yaml format for the OpenApi of users
+      operationId: api-description
+      responses:
+        "200":
+          description: Content of the OpenApi folder
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: openData document
+components:
+  schemas:
+    BookingsUser:
+      required:
+      - dates
+      - userid
+      type: object
+      properties:
+        userid:
+          type: string
+          example: chris_rivers
+        dates:
+          type: array
+          items:
+            $ref: '#/components/schemas/DateItem'
+    AllMovies:
+      type: object
+      required:
+        - movies
+      properties:
+        movies:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/MovieItem'
+    DateItem:
+      required:
+      - date
+      - movies
+      type: object
+      properties:
+        date:
+          type: string
+          example: "20151201"
+        movies:
+          type: array
+          items:
+            type: string
+            example: 276c79ec-a26a-40a6-b3d3-fb242a5947b6
+    MovieItem:
+      required:
+      - director
+      - rating
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          example: The Martian
+        rating:
+          type: string
+          example: "7"
+        director:
+          type: string
+          example: Paul McGuigan
+    AccessibleAPI:
+      required:
+        - accessibleapi
+      type: array
