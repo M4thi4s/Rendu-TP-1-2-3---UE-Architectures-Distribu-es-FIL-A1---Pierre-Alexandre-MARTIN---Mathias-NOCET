@@ -5,6 +5,7 @@ import movie_pb2_grpc
 import json
 from google.protobuf.json_format import MessageToJson
 
+
 class MovieServicer(movie_pb2_grpc.MovieServicer):
 
     def __init__(self):

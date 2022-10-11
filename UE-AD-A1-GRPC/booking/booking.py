@@ -7,6 +7,7 @@ import json
 import showtime_pb2
 import showtime_pb2_grpc
 
+
 class BookingServicer(booking_pb2_grpc.BookingServicer):
     def __init__(self):
         with open('{}/data/bookings.json'.format("."), "r") as jsf:
@@ -24,7 +25,7 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
     def GetBooking(self, request, context):
         for booking in self.db:
             yield booking_pb2.BookingData(userid=booking['userid'], dates=booking['dates'])
-   
+
     # Add a booking for a user
     def AddBooking(self, request, context):
         added = False

@@ -20,18 +20,21 @@ with open('{}/data/users.json'.format("."), "r") as jsf:
 
 # call the micro service to get bookings datas by user id
 def GetBookingByUserId(stubBooking, userId):
-    return stubBooking.GetBookingByUserId(booking_pb2.UserId(userid=userId))
+    return stubBooking.GetBookingByUserId.future(booking_pb2.UserId(userid=userId))
 
 # call the micro service to get movies datas by film id
 def GetMovieById(stubMovie, userId):
-    return stubMovie.GetMovieByID(movie_pb2.MovieID(id=userId))
+    return stubMovie.GetMovieByID.future(movie_pb2.MovieID(id=userId))
 
 # get booking list for a user id
 @app.route("/getlistbookings/<userId>", methods=['GET'])
 def get_booking_list(userId):
     with grpc.insecure_channel('localhost:3003') as channel:
         stubBooking = booking_pb2_grpc.BookingStub(channel)
-        booking_list = GetBookingByUserId(stubBooking, userId)
+                
+        booking_listPromise = GetBookingByUserId(stubBooking, userId)
+        booking_list = booking_listPromise.result()
+        
 
     channel.close()
 
@@ -44,8 +47,10 @@ def get_user_movies(id):
     # get booking list by user id
     with grpc.insecure_channel('localhost:3003') as channel:
         stubBooking = booking_pb2_grpc.BookingStub(channel)
-        booking_list = GetBookingByUserId(stubBooking, id)
-
+        
+        booking_listPromise = GetBookingByUserId(stubBooking, id)
+        booking_list = booking_listPromise.result()
+        
     channel.close()
 
     movies_list = []
@@ -55,7 +60,7 @@ def get_user_movies(id):
         for j in i.movies:
             with grpc.insecure_channel('localhost:3001') as channel:
                 stub_movie = movie_pb2_grpc.MovieStub(channel)
-                movies_list.append(eval(MessageToJson(GetMovieById(stub_movie, j))))
+                movies_list.append(eval(MessageToJson(GetMovieById(stub_movie, j).result())))
             channel.close()
 
     return make_response(jsonify(movies_list), 200)
