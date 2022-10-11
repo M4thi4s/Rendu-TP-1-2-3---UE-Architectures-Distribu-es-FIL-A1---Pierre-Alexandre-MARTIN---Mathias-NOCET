@@ -63,7 +63,7 @@ def delete_movie(_, _info, _id):
         movies = json.load(rfile)
         for movie in movies['movies']:
             if movie['id'] == _id:
-                movies["movies"].pop(movie)
+                movies["movies"].remove(movie)
                 return movie
     with open('{}/data/movies.json'.format("."), "w") as wfile:
         json.dump(movies, wfile)
